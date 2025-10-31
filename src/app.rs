@@ -4,17 +4,18 @@ use crate::config::Config;
 use crate::fl;
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
 use cosmic::iced::{window::Id, Limits, Subscription};
+use cosmic::iced_widget::row;
 use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
 use cosmic::prelude::*;
 use cosmic::widget;
 use futures_util::SinkExt;
+use std::process::Command;
 
 #[derive(Default)]
 pub struct AppModel {
     core: cosmic::Core,
     popup: Option<Id>,
     config: Config,
-    example_row: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -23,7 +24,8 @@ pub enum Message {
     PopupClosed(Id),
     SubscriptionChannel,
     UpdateConfig(Config),
-    ToggleExampleRow(bool),
+    Unmount(String),
+    Open(String),
 }
 
 impl cosmic::Application for AppModel {
@@ -71,19 +73,51 @@ impl cosmic::Application for AppModel {
     fn view(&self) -> Element<'_, Self::Message> {
         self.core
             .applet
-            .icon_button("display-symbolic")
+            .icon_button("media-eject-symbolic")
             .on_press(Message::TogglePopup)
             .into()
     }
 
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
-        let content_list = widget::list_column()
-            .padding(5)
-            .spacing(0)
-            .add(widget::settings::item(
-                fl!("example-row"),
-                widget::toggler(self.example_row).on_toggle(Message::ToggleExampleRow),
+        let mut empty = true;
+        let mut content_list = widget::column().padding(8).spacing(0);
+
+        let result = drives::get_devices();
+        for device in result.unwrap() {
+            if device.is_removable {
+                for partition in device.partitions {
+                    match partition.mountpoint {
+                        Some(mount) => {
+                            let device_label = mount
+                                .mountpoint
+                                .clone()
+                                .rsplit('/')
+                                .find(|s| !s.is_empty())
+                                .unwrap_or("No label")
+                                .to_string();
+
+                            content_list = content_list.push(row!(
+                                widget::button::text(device_label.clone())
+                                    .on_press(Message::Open(mount.mountpoint.clone())),
+                                widget::button::icon(widget::icon::from_name(
+                                    "media-eject-symbolic"
+                                ))
+                                .on_press(Message::Unmount(mount.mountpoint.clone())),
+                            ));
+
+                            empty = false;
+                        }
+                        None => {}
+                    }
+                }
+            }
+        }
+
+        if empty {
+            content_list = content_list.push(row!(
+                widget::text("No devices mounted"),
             ));
+        }
 
         self.core.applet.popup_container(content_list).into()
     }
@@ -120,7 +154,18 @@ impl cosmic::Application for AppModel {
             Message::UpdateConfig(config) => {
                 self.config = config;
             }
-            Message::ToggleExampleRow(toggled) => self.example_row = toggled,
+            Message::Unmount(mountpoint) => {
+                match Command::new("umount").args(&[mountpoint]).status() {
+                    Ok(_) => {},
+                    Err(err) => eprintln!("Error unmounting: {}", err)
+                }
+            }
+            Message::Open(mountpoint) => {
+                match Command::new("cosmic-files").args(&[mountpoint]).status() {
+                    Ok(_) => {},
+                    Err(err) => eprintln!("Error opening mount: {}", err)
+                }
+            }
             Message::TogglePopup => {
                 return if let Some(p) = self.popup.take() {
                     destroy_popup(p)
