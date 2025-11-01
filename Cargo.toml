@@ -22,16 +22,8 @@ features = ["fluent-system", "desktop-requester"]
 
 [dependencies.libcosmic]
 git = "https://github.com/pop-os/libcosmic.git"
-features = [
-    "applet",
-    "a11y",
-    "dbus-config",
-    "multi-window",
-    "single-instance",
-    "winit",
-    "wayland",
-    "wgpu",
-]
+default-features = false
+features = ["applet", "wayland"]
 
 [features]
 flatpak = []
