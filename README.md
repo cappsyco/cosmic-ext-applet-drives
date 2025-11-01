@@ -1,6 +1,21 @@
-# Cosmic Ext Applet Drives
+# COSMIC™ Drives Applet
 
-An applet for the COSMIC desktop to manage drives
+An applet for the COSMIC™ desktop to manage your drives.
+
+This is in very early stages but is functional as it stands.
+
+### What we have
+
+- List of all mounted removable drives
+- Click the drive to open the mount in COSMIC™ Files
+- Click the unmount button to unmount the drive before removable
+
+### What we want
+
+- Network mounts
+- Listing and mounting removable drives
+- Notifications for unmounting, errors, and a bossy warning about removing a drive before unmounting (with the option to disable, of course)
+- Support for unmount commands that require superuser permissions
 
 ## Installation
 
@@ -17,18 +32,6 @@ A [justfile](./justfile) is included by default for the [casey/just][just] comma
 ## Translators
 
 [Fluent][fluent] is used for localization of the software. Fluent's translation files are found in the [i18n directory](./i18n). New translations may copy the [English (en) localization](./i18n/en) of the project, rename `en` to the desired [ISO 639-1 language code][iso-codes], and then translations can be provided for each [message identifier][fluent-guide]. If no translation is necessary, the message may be omitted.
-
-## Packaging
-
-If packaging for a Linux distribution, vendor dependencies locally with the `vendor` rule, and build with the vendored sources using the `build-vendored` rule. When installing files, use the `rootdir` and `prefix` variables to change installation paths.
-
-```sh
-just vendor
-just build-vendored
-just rootdir=debian/cosmic-ext-applet-drives prefix=/usr install
-```
-
-It is recommended to build a source tarball with the vendored dependencies, which can typically be done by running `just vendor` on the host system before it enters the build environment.
 
 ## Developers
 

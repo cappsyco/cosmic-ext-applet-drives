@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Drives
-Comment=An applet for the COSMIC desktop to manage drives
+Comment=An applet for the COSMIC™ desktop to manage drives
 Type=Application
 Icon=dev.cappsy.CosmicExtAppletDrives
 Exec=cosmic-ext-applet-drives %F

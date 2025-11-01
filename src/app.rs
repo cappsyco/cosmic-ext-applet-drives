@@ -3,7 +3,7 @@
 use crate::config::Config;
 use crate::fl;
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
-use cosmic::iced::{Limits, Subscription, window::Id};
+use cosmic::iced::{window::Id, Limits, Subscription};
 use cosmic::iced_widget::row;
 use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
 use cosmic::prelude::*;
@@ -73,6 +73,7 @@ impl cosmic::Application for AppModel {
 
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
         // Collect mounted removable drives
+        // TODO: Network drives, unmounted removable drives
         let devices = drives::get_devices().unwrap_or_default();
         let mounted_devices: Vec<(String, Option<String>)> = devices
             .into_iter()
@@ -107,11 +108,10 @@ impl cosmic::Application for AppModel {
     }
 
     fn subscription(&self) -> Subscription<Self::Message> {
-        Subscription::batch(vec![
-            self.core()
-                .watch_config::<Config>(Self::APP_ID)
-                .map(|update| Message::UpdateConfig(update.config)),
-        ])
+        Subscription::batch(vec![self
+            .core()
+            .watch_config::<Config>(Self::APP_ID)
+            .map(|update| Message::UpdateConfig(update.config))])
     }
 
     fn update(&mut self, message: Self::Message) -> Task<cosmic::Action<Self::Message>> {
