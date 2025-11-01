@@ -9,8 +9,6 @@
   "finish-args": [
     "--socket=wayland",
     "--socket=fallback-x11",
-    "--socket=system-bus",
-    "--socket=session-bus",
     "--talk-name=com.system76.CosmicSettingsDaemon",
     "--talk-name=org.freedesktop.Flatpak",
     "--filesystem=xdg-config/cosmic:rw",
