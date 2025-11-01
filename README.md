@@ -7,15 +7,16 @@ This is in very early stages but is functional as it stands.
 ### What we have
 
 - List of all mounted removable drives
-- Click the drive to open the mount in COSMIC™ Files
+- Click the drive to open the mount in COSMIC Files
 - Click the unmount button to unmount the drive before removable
-
+  
 ### What we want
 
 - Network mounts
 - Listing and mounting removable drives
 - Notifications for unmounting, errors, and a bossy warning about removing a drive before unmounting (with the option to disable, of course)
 - Support for unmount commands that require superuser permissions
+- Use your default file browser when opening the drive, rather than forcing COSMIC Files
 
 ## Installation
 
