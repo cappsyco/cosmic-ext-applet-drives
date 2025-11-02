@@ -4,18 +4,20 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-only</project_license>
   <name>Drives</name>
-  <summary>An applet for the COSMIC desktop to manage drives</summary>
+  <summary>An applet for the COSMIC desktop to manage drive mounts</summary>
   <icon type="remote" width="64" height="64" scale="1">
     https://github.com/cappsyco/cosmic-ext-applet-drives/raw/main/resources/icons/hicolor/scalable/apps/icon.svg
   </icon>
   <url
         type="vcs-browser"
     >https://github.com/cappsyco/cosmic-ext-applet-drives</url>
+  <description>
+    <p>For all your applet needs!</p>
+  </description>
   <launchable
         type="desktop-id"
     >dev.cappsy.CosmicExtAppletDrives.desktop</launchable>
   <provides>
-    <id>dev.cappsy.CosmicExtAppletDrives</id>
     <binaries>
       <binary>cosmic-ext-applet-drives</binary>
     </binaries>

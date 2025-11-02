@@ -3,14 +3,14 @@
 use crate::config::Config;
 use crate::fl;
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
-use cosmic::iced::{window::Id, Limits, Subscription};
+use cosmic::iced::{Limits, Subscription, window::Id};
 use cosmic::iced_widget::row;
 use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
 use cosmic::prelude::*;
 use cosmic::widget;
+use cosmic_ext_applet_drives::get_all_devices;
 use notify_rust::Notification;
 use std::process::Command;
-use cosmic_ext_applet_drives::get_all_devices;
 
 #[derive(Default)]
 pub struct AppModel {
@@ -82,7 +82,7 @@ impl cosmic::Application for AppModel {
             for device in devices {
                 content_list = content_list.push(row!(
                     widget::button::text(device.label())
-                    .on_press(Message::Open(device.mountpoint())),
+                        .on_press(Message::Open(device.mountpoint())),
                     widget::button::icon(widget::icon::from_name("media-eject-symbolic"))
                         .on_press(Message::Unmount(device.mountpoint())),
                 ));
@@ -93,10 +93,11 @@ impl cosmic::Application for AppModel {
     }
 
     fn subscription(&self) -> Subscription<Self::Message> {
-        Subscription::batch(vec![self
-            .core()
-            .watch_config::<Config>(Self::APP_ID)
-            .map(|update| Message::UpdateConfig(update.config))])
+        Subscription::batch(vec![
+            self.core()
+                .watch_config::<Config>(Self::APP_ID)
+                .map(|update| Message::UpdateConfig(update.config)),
+        ])
     }
 
     fn update(&mut self, message: Self::Message) -> Task<cosmic::Action<Self::Message>> {
@@ -151,12 +152,10 @@ impl cosmic::Application for AppModel {
 fn run_command(cmd: &str, mountpoint: &str) {
     let result = if is_flatpak() {
         Command::new("flatpak-spawn")
-            .arg("--host")
-            .arg(cmd)
-            .arg(mountpoint)
+            .args(["sh", "-c", "--host", cmd, mountpoint])
             .status()
     } else {
-        Command::new(cmd).arg(mountpoint).status()
+        Command::new(cmd).args(["-c", mountpoint]).status()
     };
 
     match result {

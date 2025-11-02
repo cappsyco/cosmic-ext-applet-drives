@@ -49,5 +49,4 @@ pub fn get_all_devices() -> Vec<Device> {
             mounted: true,
         })
         .collect()
-
 }
