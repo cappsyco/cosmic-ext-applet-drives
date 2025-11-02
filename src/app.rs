@@ -9,9 +9,8 @@ use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
 use cosmic::prelude::*;
 use cosmic::widget;
 use notify_rust::Notification;
-use std::path::Path;
 use std::process::Command;
-use sysinfo::Disks;
+use cosmic_ext_applet_drives::get_all_devices;
 
 #[derive(Default)]
 pub struct AppModel {
@@ -74,29 +73,18 @@ impl cosmic::Application for AppModel {
     }
 
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
-        // We display all disks' information:
-        let devices = Disks::new_with_refreshed_list();
-        let mounted_devices: Vec<&Path> = devices
-            .into_iter()
-            .filter(|d| d.is_removable())
-            .map(|d| d.mount_point())
-            .collect();
-
         // Build applet view
+        let devices = get_all_devices();
         let mut content_list = widget::column().padding(8).spacing(0);
-        if mounted_devices.is_empty() {
+        if devices.is_empty() {
             content_list = content_list.push(row!(widget::text(fl!("no-devices-mounted")),));
         } else {
-            for mount in mounted_devices {
+            for device in devices {
                 content_list = content_list.push(row!(
-                    widget::button::text(
-                        mount
-                            .file_name()
-                            .map_or(String::new(), |name| name.to_string_lossy().into_owned())
-                    )
-                    .on_press(Message::Open(mount.display().to_string())),
+                    widget::button::text(device.label())
+                    .on_press(Message::Open(device.mountpoint())),
                     widget::button::icon(widget::icon::from_name("media-eject-symbolic"))
-                        .on_press(Message::Unmount(mount.display().to_string())),
+                        .on_press(Message::Unmount(device.mountpoint())),
                 ));
             }
         }
