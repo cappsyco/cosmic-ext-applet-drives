@@ -9,7 +9,9 @@ use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
 use cosmic::prelude::*;
 use cosmic::widget;
 use notify_rust::Notification;
+use std::path::Path;
 use std::process::Command;
+use sysinfo::Disks;
 
 #[derive(Default)]
 pub struct AppModel {
@@ -72,19 +74,12 @@ impl cosmic::Application for AppModel {
     }
 
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
-        // Collect mounted removable drives
-        // TODO: Network drives, unmounted removable drives
-        let devices = drives::get_devices().unwrap_or_default();
-        let mounted_devices: Vec<(String, Option<String>)> = devices
+        // We display all disks' information:
+        let devices = Disks::new_with_refreshed_list();
+        let mounted_devices: Vec<&Path> = devices
             .into_iter()
-            .filter(|d| d.is_removable)
-            .flat_map(|device| {
-                device.partitions.into_iter().filter_map(move |partition| {
-                    partition
-                        .mountpoint
-                        .map(|mount| (mount.mountpoint, device.model.clone()))
-                })
-            })
+            .filter(|d| d.is_removable())
+            .map(|d| d.mount_point())
             .collect();
 
         // Build applet view
@@ -92,14 +87,16 @@ impl cosmic::Application for AppModel {
         if mounted_devices.is_empty() {
             content_list = content_list.push(row!(widget::text(fl!("no-devices-mounted")),));
         } else {
-            for (mountpoint, model) in mounted_devices {
-                let device_label = format_device_label(&mountpoint, &model);
-
+            for mount in mounted_devices {
                 content_list = content_list.push(row!(
-                    widget::button::text(device_label.clone())
-                        .on_press(Message::Open(mountpoint.clone())),
+                    widget::button::text(
+                        mount
+                            .file_name()
+                            .map_or(String::new(), |name| name.to_string_lossy().into_owned())
+                    )
+                    .on_press(Message::Open(mount.display().to_string())),
                     widget::button::icon(widget::icon::from_name("media-eject-symbolic"))
-                        .on_press(Message::Unmount(mountpoint)),
+                        .on_press(Message::Unmount(mount.display().to_string())),
                 ));
             }
         }
@@ -161,25 +158,6 @@ impl cosmic::Application for AppModel {
     fn style(&self) -> Option<cosmic::iced_runtime::Appearance> {
         Some(cosmic::applet::style())
     }
-}
-
-fn format_device_label(mountpoint: &str, model: &Option<String>) -> String {
-    let mut device_label = mountpoint
-        .rsplit('/')
-        .find(|s| !s.is_empty())
-        .unwrap_or("")
-        .to_string();
-
-    match model {
-        Some(s) => {
-            device_label.push_str(" (");
-            device_label.push_str(s);
-            device_label.push_str(")");
-        }
-        _ => {}
-    }
-
-    device_label
 }
 
 fn run_command(cmd: &str, mountpoint: &str) {
