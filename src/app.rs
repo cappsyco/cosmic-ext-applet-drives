@@ -8,9 +8,7 @@ use cosmic::iced_widget::row;
 use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
 use cosmic::prelude::*;
 use cosmic::widget;
-use cosmic_ext_applet_drives::get_all_devices;
-use notify_rust::Notification;
-use std::process::Command;
+use cosmic_ext_applet_drives::{get_all_devices, run_command};
 
 #[derive(Default)]
 pub struct AppModel {
@@ -74,10 +72,14 @@ impl cosmic::Application for AppModel {
 
     fn view_window(&self, _id: Id) -> Element<'_, Self::Message> {
         // Build applet view
-        let devices = get_all_devices();
+        let devices = match get_all_devices() {
+            Ok(result) => result,
+            Err(_) => vec![],
+        };
         let mut content_list = widget::column().padding(8).spacing(0);
         if devices.is_empty() {
-            content_list = content_list.push(row!(widget::text(fl!("no-devices-mounted")),));
+            content_list = content_list.push(row!(widget::button::text(fl!("no-devices-mounted"))
+                .on_press(Message::Open(String::new())),));
         } else {
             for device in devices {
                 content_list = content_list.push(row!(
@@ -147,40 +149,4 @@ impl cosmic::Application for AppModel {
     fn style(&self) -> Option<cosmic::iced_runtime::Appearance> {
         Some(cosmic::applet::style())
     }
-}
-
-fn run_command(cmd: &str, mountpoint: &str) {
-    let result = if is_flatpak() {
-        Command::new("flatpak-spawn")
-            .args(["sh", "-c", "--host", cmd, mountpoint])
-            .status()
-    } else {
-        Command::new(cmd).args(["-c", mountpoint]).status()
-    };
-
-    match result {
-        Ok(_) => {}
-        Err(err) => {
-            eprintln!("Error: {}", err)
-        }
-    }
-}
-
-fn _send_notification(title: &str, desc: &str) {
-    Notification::new()
-        .summary(title)
-        .body(desc)
-        .icon("media-eject-symbolic")
-        .show()
-        .unwrap();
-}
-
-#[cfg(feature = "flatpak")]
-fn is_flatpak() -> bool {
-    true
-}
-
-#[cfg(not(feature = "flatpak"))]
-fn is_flatpak() -> bool {
-    false
 }

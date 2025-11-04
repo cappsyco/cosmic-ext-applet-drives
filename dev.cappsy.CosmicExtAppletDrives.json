@@ -29,7 +29,7 @@
         "install -Dm755 ./target/release/cosmic-ext-applet-drives -t /app/bin",
         "install -Dm644 ./resources/app.desktop /app/share/applications/dev.cappsy.CosmicExtAppletDrives.desktop",
         "install -Dm644 ./resources/app.metainfo.xml /app/share/metainfo/dev.cappsy.CosmicExtAppletDrives.metainfo.xml",
-        "install -Dm644 ./resources/icons/hicolor/scalable/apps/icon.svg /app/share/icons/hicolor/scalable/apps/dev.cappsy.CosmicExtAppletDrives.svg"
+        "install -Dm644 ./resources/icons/hicolor/scalable/apps/icon.svg /app/share/icons/hicolor/scalable/apps/dev.cappsy.CosmicExtAppletDrives-symbolic.svg"
       ],
       "sources": [
         {

@@ -12,7 +12,7 @@ appdata-dst := clean(rootdir / prefix) / 'share' / 'appdata' / appdata
 icons-src := 'resources' / 'icons' / 'hicolor'
 icons-dst := clean(rootdir / prefix) / 'share' / 'icons' / 'hicolor'
 icon-svg-src := icons-src / 'scalable' / 'apps' / 'icon.svg'
-icon-svg-dst := icons-dst / 'scalable' / 'apps' / appid + '.svg'
+icon-svg-dst := icons-dst / 'scalable' / 'apps' / appid + '-symbolic.svg'
 
 # Default recipe which runs `just build-release`
 default: build-release
@@ -58,7 +58,7 @@ install:
 
 # Uninstalls installed files
 uninstall:
-    rm {{ bin-dst }} {{ desktop-dst }} {{ icon-svg-dst }}
+    rm -f {{ bin-dst }} {{ desktop-dst }} {{ icon-svg-dst }}
 
 # Build flatpak locally
 flatpak-builder:
