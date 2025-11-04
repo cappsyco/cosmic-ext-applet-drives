@@ -1014,12 +1014,9 @@ dependencies = [
  "i18n-embed-fl 0.9.4",
  "lfs-core",
  "libcosmic",
- "mountinfo",
  "notify-rust",
  "open",
- "proc-mounts",
  "rust-embed",
- "sysinfo",
  "vergen",
 ]
 
@@ -3262,15 +3259,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mountinfo"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6341a1c48d5425a185c43f75480227dc738cf85ecc6a4bc8ca847406d44f1c17"
-dependencies = [
- "regex",
-]
-
-[[package]]
 name = "moxcms"
 version = "0.7.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3408,15 +3396,6 @@ name = "notify-types"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5e0826a989adedc2a244799e823aece04662b66609d96af8dff7ac6df9a8925d"
-
-[[package]]
-name = "ntapi"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8a3895c6391c39d7fe7ebc444a87eb2991b2a0bc718fdabd071eec617fc68e4"
-dependencies = [
- "winapi",
-]
 
 [[package]]
 name = "num-conv"
@@ -3648,16 +3627,6 @@ dependencies = [
  "block2 0.6.2",
  "libc",
  "objc2 0.6.3",
- "objc2-core-foundation",
-]
-
-[[package]]
-name = "objc2-io-kit"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "33fafba39597d6dc1fb709123dfa8289d39406734be322956a69f0931c73bb15"
-dependencies = [
- "libc",
  "objc2-core-foundation",
 ]
 
@@ -3914,15 +3883,6 @@ dependencies = [
  "redox_syscall 0.5.18",
  "smallvec",
  "windows-link 0.2.1",
-]
-
-[[package]]
-name = "partition-identity"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9fa925f9becb532d758b0014b472c576869910929cf4c3f8054b386f19ab9e21"
-dependencies = [
- "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -4193,15 +4153,6 @@ dependencies = [
  "syn 2.0.108",
  "version_check",
  "yansi",
-]
-
-[[package]]
-name = "proc-mounts"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d652f8435d0ab70bf4f3590a6a851d59604831a458086541b95238cc51ffcf2"
-dependencies = [
- "partition-identity",
 ]
 
 [[package]]
@@ -5031,20 +4982,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8eab9a99a024a169fe8a903cf9d4a3b3601109bcc13bd9e3c6fff259138626c4"
 dependencies = [
  "libc",
-]
-
-[[package]]
-name = "sysinfo"
-version = "0.37.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "16607d5caffd1c07ce073528f9ed972d88db15dd44023fa57142963be3feb11f"
-dependencies = [
- "libc",
- "memchr",
- "ntapi",
- "objc2-core-foundation",
- "objc2-io-kit",
- "windows 0.61.3",
 ]
 
 [[package]]

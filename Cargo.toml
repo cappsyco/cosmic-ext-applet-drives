@@ -3,7 +3,7 @@ name = "cosmic-ext-applet-drives"
 version = "0.1.0"
 edition = "2024"
 license = "GPL-3.0-only"
-description = "An applet for the COSMIC desktop to manage drives"
+description = "An applet for the COSMIC desktop to manage mounted drives"
 repository = "https://github.com/cappsyco/cosmic-ext-applet-drives"
 
 [build-dependencies]
@@ -13,12 +13,9 @@ vergen = { version = "8", features = ["git", "gitcl"] }
 drives = "0.6.0"
 i18n-embed-fl = "0.9.2"
 lfs-core = "0.16.2"
-mountinfo = "0.2.0"
 notify-rust = "4.11.7"
 open = "5.3.0"
-proc-mounts = "0.3.0"
 rust-embed = "8.5.0"
-sysinfo = "0.37.2"
 
 [dependencies.i18n-embed]
 version = "0.15"

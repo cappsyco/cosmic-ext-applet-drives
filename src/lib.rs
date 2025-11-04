@@ -40,25 +40,6 @@ impl Device {
     pub fn _open(&self) {}
 }
 
-pub fn _get_all_devices_old() -> Vec<Device> {
-    // USB devices
-    // TODO: Add network mounts
-    Disks::new_with_refreshed_list()
-        .into_iter()
-        .filter(|d| d.is_removable())
-        .map(|d| Device {
-            device_type: DeviceType::USB,
-            block: String::new(),
-            label: d
-                .mount_point()
-                .file_name()
-                .map_or(String::new(), |name| name.to_string_lossy().into_owned()),
-            mountpoint: d.mount_point().display().to_string(),
-            mounted: true,
-        })
-        .collect()
-}
-
 pub fn get_all_devices() -> std::io::Result<Vec<Device>> {
     let mut devices = vec![];
 
