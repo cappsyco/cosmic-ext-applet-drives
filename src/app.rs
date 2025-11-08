@@ -2,7 +2,9 @@
 
 use crate::config::Config;
 use crate::fl;
+use cosmic::applet::padded_control;
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
+use cosmic::iced::Length;
 use cosmic::iced::{Limits, Subscription, window::Id};
 use cosmic::iced_widget::{column, row};
 use cosmic::iced_winit::commands::popup::{destroy_popup, get_popup};
@@ -85,7 +87,9 @@ impl cosmic::Application for AppModel {
                     column!(
                         widget::button::text(device.label())
                             .on_press(Message::Open(device.mountpoint()))
-                    ),
+                            .width(Length::Fill),
+                    )
+                    .width(Length::Fill),
                     column!(
                         widget::button::icon(widget::icon::from_name("media-eject-symbolic"))
                             .on_press(Message::Unmount(device.mountpoint()))
